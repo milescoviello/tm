@@ -1,0 +1,6 @@
+# build output
+/target
+# screenshots and captures from tools/shot.py; they show real session titles
+/shots
+*.png
+!docs/*.png

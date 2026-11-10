@@ -1,0 +1,20 @@
+#!/bin/bash
+# Stand-in for Claude Code in tests. It registers the way Claude Code 2.1.3xx
+# does (~/.claude/sessions/<pid>.json with pid, sessionId, procStart and its
+# tmux pane), sets the terminal title, prints its arguments, and idles.
+sid=""
+args=("$@")
+for ((i = 0; i < ${#args[@]}; i++)); do
+    [[ ${args[i]} == --resume ]] && sid=${args[i + 1]}
+done
+[[ -z $sid ]] && sid=$(cat /proc/sys/kernel/random/uuid)
+start=$(awk '{print $22}' /proc/$$/stat)
+mkdir -p "$HOME/.claude/sessions"
+pane=$(tmux display-message -p -t "$TMUX_PANE" '#{session_name}:#{window_id}.#{pane_id}' 2>/dev/null)
+cat >"$HOME/.claude/sessions/$$.json" <<EOF
+{"pid":$$,"sessionId":"$sid","cwd":"$PWD","procStart":"$start","kind":"interactive","tmux":"$pane","status":"${FAKE_STATUS:-idle}","name":"fake-$$"}
+EOF
+trap 'rm -f "$HOME/.claude/sessions/$$.json"; exit 0' EXIT HUP TERM INT
+printf '\033]2;✳ %s\007' "${FAKE_TITLE:-Fake ${sid:0:8}}"
+echo "fake claude $sid args: $*"
+while sleep 1; do :; done

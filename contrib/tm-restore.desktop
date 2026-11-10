@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=tm restore
+Comment=Bring back tmux sessions from the last tm snapshot (does nothing if tmux already has sessions)
+Exec=sh -c '"$HOME/.local/bin/tm" restore --boot >/dev/null 2>&1'
+NoDisplay=true
+X-KDE-autostart-phase=2

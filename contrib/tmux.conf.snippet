@@ -1,0 +1,8 @@
+
+# >>> tm >>>  (tmux manager; delete this block to uninstall)
+# prefix + t opens tm as a popup (tmux's default for prefix + t is the clock)
+bind-key t display-popup -E -w 90% -h 85% -T ' tm ' '"$HOME/.local/bin/tm" --popup'
+# a snapshot every 15 min (autosave_minutes in ~/.config/tm/config.toml) for
+# as long as this server runs; a second copy started by a reload just exits
+run-shell -b '"$HOME/.local/bin/tm" autosave --socket "#{socket_path}" --server-pid "#{pid}" >/dev/null 2>&1 || true'
+# <<< tm <<<

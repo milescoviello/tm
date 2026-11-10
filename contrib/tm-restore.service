@@ -1,0 +1,16 @@
+# Bring back tmux sessions from the newest tm snapshot when the user manager
+# starts (at boot, with lingering on). Does nothing if tmux already has
+# sessions. The tmux server it starts runs in a scope of its own, so it
+# outlives this unit.
+[Unit]
+Description=tm: restore tmux sessions from the last snapshot
+Documentation=https://github.com/milescoviello/tm
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=%h/.local/bin/tm restore --boot
+TimeoutStartSec=5min
+
+[Install]
+WantedBy=default.target
